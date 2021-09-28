@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <title>TubeDown</title>
+</head>
+<body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 ">  
+
+    <div class="flex h-screen items-center justify-center ">
+
+        <div class="relative text-gray-700 mt-2">
+            <input id="yt-url" class="w-full h-10 pl-3 pr-8 text-base placeholder-gray-100 rounded-md min-w-full bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 text-gray-100" type="text" placeholder="YouTube Url"/>
+
+            <button id="download-btn" class="px-4 h-10 w-full mt-2 border border-transparent text-base font-sm rounded-md  text-white bg-gray-800 hover:bg-gray-900 focus:border-gray-900 active:bg-gray-900 transition ease-in-out duration-150">
+                <span id="btn-loading" class="inline-flex hidden">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Downloading
+                </span>
+                <span id="btn-normal" class="inline-flex">Download</span>
+            </button>
+
+            <!-- Messages section -->
+            <div class="flex h-10 w-full justify-center pt-5">
+                <div  class="relative text-gray-700">
+                    <span id="error" class="text-indigo-900 hidden"></span>
+                    <span id="success" class="text-blue-700 hidden"></span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="/eel.js"></script>
+    <script>
+        
+        var btn = document.getElementById('download-btn')
+        var url = document.getElementById('yt-url')
+        var error = document.getElementById('error')
+        var success = document.getElementById('success')
+        var btn_normal = document.getElementById('btn-normal')
+        var btn_loading = document.getElementById('btn-loading')
+        var loading = false
+
+        btn.addEventListener("click", function(e) {
+            
+            setLoader()
+            
+            eel.download_yt(url.value)(function(value){
+                if(value === 'not valid'){
+                    error.innerHTML  = 'Not valid url'
+                    error.classList.remove('hidden')
+                    setLoader()
+                }else if(false){
+                    error.innerHTML = "Error while trying to proccess the video. Trya again later."
+                }else{
+                    setLoader()
+                    error.classList.add('hidden')
+
+                    url.value = ''
+
+                    success.innerHTML = "Video downloaded succesfully."
+                    success.classList.remove('hidden')
+                    
+                    setTimeout(function(){
+                        success.classList.add('hidden')
+                    }, 1500)
+                }
+            })
+
+        });
+        
+        function setLoader(){
+
+            if( loading ){
+                btn_loading.classList.add('hidden')
+                btn_normal.classList.remove('hidden')
+                loading = false
+            }else{
+                btn_loading.classList.remove('hidden')
+                btn_normal.classList.add('hidden')
+                loading = true
+            }
+        }
+
+    </script>
+</body>
+</html>
